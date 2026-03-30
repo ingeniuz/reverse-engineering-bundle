@@ -67,7 +67,9 @@ class DatabaseAnalyzer
                 'host'   => $this->databaseConfig['host'] ?? 'unknown',
             ]);
 
-            $connection->connect();
+            if (!$connection->isConnected()) {
+                $connection->executeQuery('SELECT 1');
+            }
             $isConnected = $connection->isConnected();
 
             if ($isConnected) {
