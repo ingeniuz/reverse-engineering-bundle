@@ -353,7 +353,7 @@ class DatabaseAnalyzer
 
             $columns[] = [
                 'name'           => $columnName,
-                'type'           => $column->getType()->getName(),
+                'type'           => \Doctrine\DBAL\Types\Type::lookupName($column->getType()),
                 'raw_type'       => $detailedInfo['Type'] ?? $column->getType()->getName(),
                 'length'         => $column->getLength(),
                 'precision'      => $column->getPrecision(),
