@@ -187,6 +187,19 @@ class EntityGenerator
                 continue;
             }
 
+            $default = $column['default'];
+
+            if ($default instanceof \Doctrine\DBAL\Schema\DefaultExpression\CurrentTimestamp) {
+                $default = 'CURRENT_TIMESTAMP';
+            } elseif ($default instanceof \Doctrine\DBAL\Schema\DefaultExpression\CurrentDate) {
+                $default = 'CURRENT_DATE';
+            } elseif ($default instanceof \Doctrine\DBAL\Schema\DefaultExpression\CurrentTime) {
+                $default = 'CURRENT_TIME';
+            } elseif (is_object($default)) {
+                // Fallback for any other expression objects
+                $default = (string) $default;   // or throw / log if you prefer
+            }
+
             $property = [
                 'name'                     => $column['property_name'],
                 'column_name'              => $column['name'],
@@ -196,7 +209,7 @@ class EntityGenerator
                 'length'                   => $column['length'],
                 'precision'                => $column['precision'],
                 'scale'                    => $column['scale'],
-                'default'                  => $column['default'],
+                'default'                  => $default,
                 'auto_increment'           => $column['auto_increment'],
                 'comment'                  => $column['comment'],
                 'is_primary'               => in_array($column['name'], $primaryKey, true),
